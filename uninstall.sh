@@ -31,5 +31,5 @@ rm -rf "$INSTALL_DIR"
 if [ "$IS_AGENT" -eq 1 ]; then
   echo '{"status":"success","action":"uninstalled"}'
 else
-  echo "✅ Antigravity Chinese CDP 守护进程已停止，所有相关配置已彻底移除。"
+  echo "[信息] Antigravity Chinese CDP 守护进程已停止，相关配置已清理完成。"
 fi
