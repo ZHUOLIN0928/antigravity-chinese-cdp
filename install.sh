@@ -5,9 +5,15 @@
 
 set -e
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "")"
+DIR=""
+if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
+  DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "")"
+fi
 INSTALL_DIR="$HOME/.antigravity-zh-cdp"
-BIN_SRC="$DIR/bin/antigravity-zh-patch.js"
+BIN_SRC=""
+if [ -n "$DIR" ] && [ -f "$DIR/bin/antigravity-zh-patch.js" ]; then
+  BIN_SRC="$DIR/bin/antigravity-zh-patch.js"
+fi
 BIN_DST="$INSTALL_DIR/bin/antigravity-zh-patch.js"
 
 IS_AGENT=0
@@ -41,7 +47,7 @@ fi
 # 2. Deploy binary files (Local copy or Remote raw download for clone-free usage)
 mkdir -p "$INSTALL_DIR/bin"
 
-if [ -f "$BIN_SRC" ]; then
+if [ -n "$BIN_SRC" ] && [ -f "$BIN_SRC" ]; then
   cp "$BIN_SRC" "$BIN_DST"
 else
   if [ "$IS_AGENT" -eq 0 ]; then

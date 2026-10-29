@@ -51,10 +51,12 @@ function build() {
   }
   const template = fs.readFileSync(TEMPLATE_PATH, 'utf8');
 
+  // Use replacer functions for String.prototype.replace to prevent
+  // special substitution patterns ($1, $&, $', etc.) from corrupting code
   const renderedOverlay = template
-    .replace(/__PATCH_VERSION__/g, String(newVersion))
-    .replace('__RAW_DICT__', JSON.stringify(dict.exact))
-    .replace('__RAW_PATTERNS__', JSON.stringify(dict.patterns));
+    .replace(/__PATCH_VERSION__/g, () => String(newVersion))
+    .replace('__RAW_DICT__', () => JSON.stringify(dict.exact))
+    .replace('__RAW_PATTERNS__', () => JSON.stringify(dict.patterns));
 
   const overlaySourceLiteral = JSON.stringify(renderedOverlay);
 
@@ -63,13 +65,13 @@ function build() {
   if (!overlayRegex.test(patchScript)) {
     throw new Error('Could not find "const overlaySource = ...;" in bin/antigravity-zh-patch.js');
   }
-  patchScript = patchScript.replace(overlayRegex, `const overlaySource = ${overlaySourceLiteral};`);
+  patchScript = patchScript.replace(overlayRegex, () => `const overlaySource = ${overlaySourceLiteral};`);
 
   // Update TARGET_PATCH_VERSION constant
   if (/const TARGET_PATCH_VERSION = \d+;/.test(patchScript)) {
     patchScript = patchScript.replace(
       /const TARGET_PATCH_VERSION = \d+;/,
-      `const TARGET_PATCH_VERSION = ${newVersion};`
+      () => `const TARGET_PATCH_VERSION = ${newVersion};`
     );
   }
 

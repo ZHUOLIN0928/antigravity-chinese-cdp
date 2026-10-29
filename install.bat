@@ -26,7 +26,7 @@ if exist "%BIN_SRC%" (
 ) else (
     echo [信息] 本地未找到补丁文件，正在从 GitHub 官方源下载最新补丁...
     curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/bin/antigravity-zh-patch.js -o "%BIN_DST%"
-    if %errorlevel% neq 0 (
+    if !errorlevel! neq 0 (
         echo [错误] 从 GitHub 下载补丁失败，请检查网络连接。
         exit /b 1
     )
@@ -37,7 +37,7 @@ if "%WITH_RULES%"=="1" (
     set "RULES_FILE=%RULES_DIR%\AGENTS.md"
     if not exist "!RULES_DIR!" mkdir "!RULES_DIR!"
     findstr /C:"核心开发概念术语保留" "!RULES_FILE!" >nul 2>nul
-    if %errorlevel% neq 0 (
+    if !errorlevel! neq 0 (
         (
             echo.
             echo # 智能体交互与开发规范 (Antigravity Chinese Rules^)
