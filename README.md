@@ -1,6 +1,6 @@
 # Antigravity Chinese CDP (antigravity-chinese-cdp)
 
-基于 Chrome DevTools Protocol (CDP) 运行期内存注入的 Google Antigravity 中文本地化与更新自愈套件。
+基于 Chrome DevTools Protocol (CDP) 运行期内存注入的 Google Antigravity 中文本地化与自适应退避自愈套件。
 
 ---
 
@@ -9,28 +9,36 @@
 1. **零文件修改与完整签名保留**：
    - 不修改或替换客户端的 `app.asar` 文件。
    - 保留 Google 官方二进制数字签名，在 macOS 下不会因代码签名变动而触发钥匙串（Safe Storage）访问授权弹窗。
-2. **零停机内存热注入**：
-   - 通过本地 CDP WebSocket 端口与运行中的 Chromium 渲染进程建立连接，直接向前端上下文注入语言包与观察器。
-   - 安装与升级过程中无需关闭或重启 Antigravity 客户端。
-3. **版本更新自愈**：
-   - 守护进程持续监听客户端进程与端口状态。客户端完成版本升级并重启后，守护进程会自动重新连接并注入，无需重新执行安装。
-4. **原生右键菜单内存拦截**：
-   - 针对 Electron 桌面端原生上下文菜单（Context Menu）与二级子菜单，通过前端模板构建阶段的特征拦截，在内存中完成汉化，无需依赖修改主进程文件。
+2. **Chromium 原生 DevToolsActivePort 底层探测**：
+   - 重构端口发现机制，优先通过 Chromium 原生 `DevToolsActivePort` 规范读取调试端口，零子进程开销，彻底解决 Windows / Linux 跨平台兼容难题与路径依赖。
+   - 保留 `tasklist` / `netstat` / `ps` / `lsof` 作为健壮的双重 Fallback 机制。
+3. **功耗敏感型自适应退避守护**：
+   - 注入成功且页面处于稳定健康状态时，自动将检测周期从 2 秒拉长至 12 秒，极大降低笔记本电池与 CPU 开销；
+   - 捕获端口文件变动、新窗口开启或客户端重启时，毫秒级恢复高频探测并重新自愈挂载。
+4. **面向现代 AI 架构的开发者术语保留**：
+   - 深度审校并规范开发者原生概念：完备保留 **Subagent**、**Hook**、**Sidecar**、**Slash Command**、**Token** 等术语，消除歧义与不准确的生硬字面直译。
 5. **富文本输入框与模型区域隔离**：
    - 包含针对 Lexical 富文本编辑器、活动光标焦点（`document.activeElement`）、代码块及 AI 响应正文的物理隔离规则，防止打字中断或误翻正文。
    - 独立隔离模型选择器组件，模型技术标识与思考状态保持原生展示。
+6. **自动化构建与转义工具链**：
+   - 提供 `tools/build.js`，直接维护 `dict/zh-CN.json`，一键编译、压缩转义并生成独立的 `bin/antigravity-zh-patch.js`，Patch 版本号自动递增。
 
 ---
 
 ## 安装方法
 
-### 方式一：macOS / Linux 一键安装
+### 方式一：macOS / Linux 一键安装（单行指令，无需提前克隆）
 
-打开终端并运行：
+打开终端并直接运行：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash
 ```
+
+> **提示**：若希望一键同步中文智能体交互规范（强制中文，保留 Subagent、Hook、Sidecar 原生术语至 `~/.gemini/config/AGENTS.md`），可追加 `--with-rules`：
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --with-rules
+> ```
 
 安装脚本将自动执行以下操作：
 * 将守护脚本部署至 `~/.antigravity-zh-cdp/bin/`；
@@ -39,10 +47,10 @@ curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp
 
 ### 方式二：Windows 一键安装
 
-在命令提示符或 PowerShell 中克隆本仓库后运行：
+在命令提示符或 PowerShell 中运行：
 
 ```bat
-install.bat
+install.bat --with-rules
 ```
 
 ### 方式三：面向 AI 智能体（Agent）自动化安装
@@ -51,7 +59,21 @@ install.bat
 
 ```bash
 # 智能体专用无交互指令（输出标准化 JSON）
-curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --agent
+curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --agent --with-rules
+```
+
+---
+
+## 开发与构建
+
+本项目提供完善的工程化自动化工具链：
+
+```bash
+# 运行自动化测试套件（术语校验、DevToolsActivePort 机制、自适应退避与语法）
+npm test
+
+# 从 dict/zh-CN.json 自动构建编译独立补丁脚本（版本号自动递增）
+npm run build
 ```
 
 ---
@@ -68,13 +90,15 @@ curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp
 
 ### Windows
 
-运行仓库目录下的 `uninstall.bat`。
+```bat
+uninstall.bat
+```
 
 ---
 
 ## 词库与覆盖范围
 
-* **精确词条**：4,971 条（覆盖设置面板、侧边栏、控制面板、通知中心、快捷键、菜单项及内置插件）。
+* **精确词条**：4,977 条（覆盖设置面板、侧边栏、控制面板、通知中心、快捷键、菜单项及内置插件）。
 * **动态正则规则**：338 组（覆盖思考时间、工作耗时、相对时间戳、多步骤工具合并摘要等）。
 * **适配版本**：Google Antigravity v2.26.0+（向下兼容 v2.18.0+）。
 

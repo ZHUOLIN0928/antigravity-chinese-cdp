@@ -1,7 +1,7 @@
 # AGENTS.md - Antigravity Chinese CDP 智能体操作规范
 
 > 本文档专为 AI 智能体（包括 Antigravity、Cursor、Claude Code、Codex、OpenCode 等）编写。  
-> 当人类用户要求配置、修复或汉化 Google Antigravity 时，请优先阅读并执行本规范。
+> 当人类用户要求配置、修复、汉化 Google Antigravity 或规范交互术语时，请优先阅读并执行本规范。
 
 ---
 
@@ -13,34 +13,37 @@
 2. **零文件系统污染（NON-INVASIVE）**：
    - 不需要解包、替换或修改 `app.asar`。
    - 保持官方二进制文件与数字签名完整性，在 macOS 上不会触发钥匙串（Safe Storage）密码弹窗。
-3. **版本自愈（AUTO-HEALING）**：
-   - 守护进程通过轮询监听主进程调试端口。当用户或系统静默更新 Antigravity 客户端并重启后，守护进程将在毫秒级重新挂载注入，无需人工重复打补丁。
+3. **原生 DevToolsActivePort 机制与自适应退避（POWER-EFFICIENT）**：
+   - 优先通过 Chromium 原生 `DevToolsActivePort` 机制探测调试端口，跨 macOS、Linux 与 Windows 原生无阻；
+   - 守护进程引入自适应退避算法：注入稳定后将心跳拉长至 12 秒，在客户端重启或新窗口建立时立即毫秒级恢复高频自愈。
+4. **现代开发者术语保留完备性（DEVELOPER-FIRST）**：
+   - 严格保留 **Subagent**、**Hook**、**Sidecar**、**Slash Command**、**Token** 等原生术语，避免生硬或混淆的字面直译。
 
 ---
 
 ## 2. 智能体一键静默安装指令
 
-在终端中直接执行以下命令（添加 `--agent` 标志将以无交互 JSON 模式运行）：
+在终端中直接执行以下命令（添加 `--agent` 标志将以无交互 JSON 模式运行；添加 `--with-rules` 可同步中文交互规范）：
 
 ### macOS / Linux
 
 ```bash
-# 方式 A：本地已有仓库时
-chmod +x ./install.sh && ./install.sh --agent
+# 方式 A：单行远程一键安装（无需提前 Git Clone）
+curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --agent --with-rules
 
-# 方式 B：远端一键安装（单行指令）
-curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --agent
+# 方式 B：本地仓库执行
+chmod +x ./install.sh && ./install.sh --agent --with-rules
 ```
 
 成功返回值示例（退出码 0）：
 ```json
-{"status":"success","daemon":"running","installed_path":"/Users/username/.antigravity-zh-cdp/bin/antigravity-zh-patch.js","os":"Darwin"}
+{"status":"success","daemon":"running","installed_path":"/Users/username/.antigravity-zh-cdp/bin/antigravity-zh-patch.js","os":"Darwin","with_rules":1}
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
-& "$env:USERPROFILE\.antigravity-zh-cdp\install.bat"
+& "$env:USERPROFILE\.antigravity-zh-cdp\install.bat" --with-rules
 ```
 
 ---
@@ -60,8 +63,11 @@ launchctl list | grep "com.antigravity.zhpatch"
 
 ### 查看实时注入日志
 ```bash
-# 查看最近 20 行日志
+# macOS 日志路径
 tail -n 20 ~/Library/Logs/AntigravityZhPatch/zhpatch.log
+
+# Linux 日志路径
+tail -n 20 ~/.local/state/antigravity-zh-patch/zhpatch.log
 ```
 
 若日志中出现以下条目，即代表注入正常运转：
@@ -71,7 +77,21 @@ tail -n 20 ~/Library/Logs/AntigravityZhPatch/zhpatch.log
 
 ---
 
-## 4. 卸载指令
+## 4. 自动化构建与测试
+
+本项目提供现代工具链支持：
+
+```bash
+# 执行自动化测试（校验术语、DevToolsActivePort探测、自适应退避与语法）
+npm test
+
+# 从 dict/zh-CN.json 自动构建编译独立补丁脚本（版本号自动递增）
+npm run build
+```
+
+---
+
+## 5. 卸载指令
 
 若用户要求恢复或卸载，直接运行：
 
