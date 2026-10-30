@@ -1,0 +1,24 @@
+{
+  "name": "antigravity-chinese-cdp",
+  "version": "3.1.0",
+  "description": "Non-invasive Chinese localization for Google Antigravity via Chrome DevTools Protocol",
+  "main": "bin/antigravity-zh-patch.js",
+  "scripts": {
+    "build": "node tools/build.js",
+    "test": "node tools/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZHUOLIN0928/antigravity-chinese-cdp.git"
+  },
+  "keywords": [
+    "antigravity",
+    "chinese",
+    "i18n",
+    "cdp",
+    "electron",
+    "subagent"
+  ],
+  "author": "Antigravity Chinese CDP Contributors",
+  "license": "Apache-2.0"
+}
