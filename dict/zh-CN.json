@@ -1,7 +1,7 @@
 {
   "version": "3.0.0",
   "target": "Google Antigravity v2.26.0+",
-  "exact_count": 5062,
+  "exact_count": 5059,
   "patterns_count": 344,
   "exact": {
     "9222": "9222",
@@ -2030,7 +2030,6 @@
     "Hide sidebar": "隐藏侧边栏",
     "Hide token": "隐藏令牌",
     "Hide tools": "隐藏工具",
-    "High": "高",
     "High Contrast": "高对比度",
     "High Contrast Dark": "高对比度深色",
     "High Contrast Light": "高对比度浅色",
@@ -2367,7 +2366,6 @@
     "Long pages like this one will be broken down into outlines and read as needed. Read more at our": "此类长页面将被拆分为大纲并按需读取。了解更多请访问",
     "Lost connection to the language server. Agent features may not work.": "与语言服务器断开连接，Agent 功能可能无法正常工作。",
     "Lost connection to the remote instance. Please wait a minute or refresh the page.": "与远程实例断开连接，请稍候或刷新页面。",
-    "Low": "低",
     "MANDATORY specialist subagent for Cloud Firestore Security Rules (firestore.rules). Whenever your task requires creating, authoring, or modifying Firestore Security Rules (firestore.rules), you MUST delegate rules authoring to this subagent rather than writing firestore.rules directly in the main agent.": "Cloud Firestore 安全规则 (firestore.rules) 专属专家 Subagent。每当任务需要创建、编写或修改 Firestore 安全规则时，必须委派给此 Subagent 处理，而非在主 Agent 中直接编写。",
     "MARK READ": "标记为已读",
     "MARK UNREAD": "标记为未读",
@@ -2470,7 +2468,6 @@
     "Media": "媒体",
     "Media Files": "媒体文件",
     "Media actions": "媒体操作",
-    "Medium": "中",
     "Memory": "内存",
     "Mention": "提及",
     "Mention Page": "引用页面",
