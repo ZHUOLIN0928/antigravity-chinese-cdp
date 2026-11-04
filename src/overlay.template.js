@@ -80,7 +80,7 @@
     'input', 'textarea', 'select', 'option',
     '[contenteditable="true"]', '[contenteditable="plaintext-only"]', '[contenteditable=""]',
     '[data-lexical-editor]',
-    '[role="textbox"]', '[role="combobox"]', '[role="searchbox"]',
+    '[role="textbox"]', 'input[role="combobox"]', '[role="searchbox"]',
     // Model selector internal specs (keep model names & effort badges pure English to prevent React DOM clash)
     '[data-testid="model-selector-trigger"]',
     '[data-testid="model-selector-item"]',
@@ -151,7 +151,8 @@
     if (ce === 'true' || ce === 'plaintext-only' || ce === '') return true;
     if (el.getAttribute?.('data-lexical-editor') === 'true') return true;
     const role = el.getAttribute?.('role');
-    if (role === 'textbox' || role === 'combobox' || role === 'searchbox') return true;
+    if (role === 'textbox' || role === 'searchbox') return true;
+    if (role === 'combobox' && tag !== 'BUTTON' && !el.hasAttribute?.('aria-haspopup')) return true;
     return false;
   }
 
