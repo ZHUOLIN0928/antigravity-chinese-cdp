@@ -102,7 +102,6 @@
     '[data-testid="file-title-name"]', '[data-testid="entity-pill"]',
     // Customization cards (keep extension names and descriptions in native English)
     '[data-testid="customization-card"]',
-    '.agy-card',
     // Sidebar project names & conversation titles
     '[data-project-card="true"]',
     '[data-testid="conversation-row-sidebar"] span.truncate',
@@ -185,10 +184,7 @@
     try {
       if (!element || element.nodeType !== Node.ELEMENT_NODE) return true;
       if (element.isContentEditable || isModelSelectorBoundary(element)) return true;
-      const active = document.activeElement;
-      if (active && (active === element || element.contains(active)) && isEditableElement(active)) {
-        return true;
-      }
+      // Do not skip placeholder/aria-label translation even when input is focused
       let el = element;
       while (el) {
         if (el.isContentEditable || isModelSelectorBoundary(el)) return true;
@@ -537,6 +533,13 @@
     }
 
     // 2. Specific JSX fragmented Alert self-healing (plan-command-fyi-alert)
+    if (el.getAttribute?.('data-testid') === 'sidecar-list-empty') {
+      const pList = el.querySelectorAll?.('p');
+      if (pList && pList[0] && !pList[0]._zhEmptyDone) {
+        pList[0].textContent = '暂无自动化任务';
+        pList[0]._zhEmptyDone = true;
+      }
+    }
     if (el.getAttribute?.('data-testid') === 'plan-command-fyi-alert') {
       const alertSpan = el.querySelector?.('span');
       if (alertSpan && !alertSpan._zhAlertDone) {
