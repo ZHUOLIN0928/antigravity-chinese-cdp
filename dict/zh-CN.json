@@ -1,8 +1,8 @@
 {
   "version": "3.0.0",
   "target": "Google Antigravity v2.26.0+",
-  "exact_count": 5062,
-  "patterns_count": 346,
+  "exact_count": 5067,
+  "patterns_count": 347,
   "exact": {
     "9222": "9222",
     " (write-in)": "(自行填写)",
@@ -4895,8 +4895,8 @@
     "to select": "进行选择",
     "to upload": "以上传",
     "today": "今天",
-    "tokens (": "个 Token (",
-    "tokens)": "个 Token)",
+    "tokens (": "Token (",
+    "tokens)": "Token)",
     "troubleshooting guide": "故障排查指南",
     "ui-extension": "UI 侧边栏扩展开发",
     "ui-plugin-navigation": "UI 插件面板导航",
@@ -5065,9 +5065,18 @@
     "When it runs": "运行时间",
     "Schedule type": "计划类型",
     "Outside of project": "项目外部",
-    "outside-of-project": "项目外部"
+    "outside-of-project": "项目外部",
+    "Manage project folders and settings.": "管理项目文件夹与设置。",
+    "Manage workspace folders and settings.": "管理工作区文件夹与设置。",
+    "Manage workspace folders, agent settings, and permissions.": "管理工作区文件夹、Agent 设置与权限。",
+    "Manage project resources and settings.": "管理项目资源与设置。",
+    "Manage project resources, agent settings, and permissions.": "管理项目资源、Agent 设置与权限。"
   },
   "patterns": [
+    {
+      "regex": "^(\\d+)\\s+active\\s+conversations?\\s+and\\s+(\\d+)\\s+archived\\s+conversations?$",
+      "replacement": "$1 个活动会话与 $2 个已归档会话"
+    },
     {
       "regex": "^See less in (.+)$",
       "replacement": "收起 $1 中的项目"
@@ -6258,55 +6267,55 @@
     },
     {
       "regex": "^([\\d,]+)\\s*\\/\\s*([\\d,]+)\\s*tokens\\s*\\(([\\d.]+%)\\)$",
-      "replacement": "$1 / $2 个 Token ($3)"
+      "replacement": "$1 / $2 Token ($3)"
     },
     {
       "regex": "^\\(([\\d,]+)\\s*tokens\\)\\s*([\\d.]+%)$",
-      "replacement": "($1 个 Token) $2"
+      "replacement": "($1 Token) $2"
     },
     {
       "regex": "^\\(([\\d,]+)\\s*tokens\\)$",
-      "replacement": "($1 个 Token)"
+      "replacement": "($1 Token)"
     },
     {
       "regex": "^Unused capacity:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "未用容量：$1 个 Token"
+      "replacement": "未用容量：$1 Token"
     },
     {
       "regex": "^Rules:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "规则：$1 个 Token"
+      "replacement": "规则：$1 Token"
     },
     {
       "regex": "^Skills:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "技能：$1 个 Token"
+      "replacement": "技能：$1 Token"
     },
     {
       "regex": "^Subagents:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "Subagent：$1 个 Token"
+      "replacement": "Subagent：$1 Token"
     },
     {
       "regex": "^MCP Tools:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "MCP 工具：$1 个 Token"
+      "replacement": "MCP 工具：$1 Token"
     },
     {
       "regex": "^MCP Servers:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "MCP 服务：$1 个 Token"
+      "replacement": "MCP 服务：$1 Token"
     },
     {
       "regex": "^System Prompt:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "系统提示词：$1 个 Token"
+      "replacement": "系统提示词：$1 Token"
     },
     {
       "regex": "^Customizations:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "自定义扩展：$1 个 Token"
+      "replacement": "自定义扩展：$1 Token"
     },
     {
       "regex": "^Other Customizations:\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "其他自定义扩展：$1 个 Token"
+      "replacement": "其他自定义扩展：$1 Token"
     },
     {
       "regex": "^(.+):\\s*([\\d,]+)\\s*tokens$",
-      "replacement": "$1：$2 个 Token"
+      "replacement": "$1：$2 Token"
     },
     {
       "regex": "^(\\d+)\\s+demoted$",
@@ -6338,19 +6347,19 @@
     },
     {
       "regex": "^Exceeded the rules token budget\\. Full rule content \\(([\\d,]+)\\s*tokens\\) was replaced with a lightweight file-path pointer in context\\.$",
-      "replacement": "已超出规则 Token 预算。完整规则内容（$1 个 Token）已在上下文中替换为轻量级文件路径指针。"
+      "replacement": "已超出规则 Token 预算。完整规则内容（$1 Token）已在上下文中替换为轻量级文件路径指针。"
     },
     {
       "regex": "^All tools in this MCP server \\(([\\d,]+)\\s*tokens\\) exceeded the customization budget and were excluded from context\\.$",
-      "replacement": "此 MCP 服务中的所有工具（$1 个 Token）均超出自定义扩展预算，已从上下文中排除。"
+      "replacement": "此 MCP 服务中的所有工具（$1 Token）均超出自定义扩展预算，已从上下文中排除。"
     },
     {
       "regex": "^(\\d+)\\s+tools?\\s+in this MCP server \\(([\\d,]+)\\s*tokens\\) exceeded the customization budget and were excluded from context\\.$",
-      "replacement": "此 MCP 服务中的 $1 个工具（$2 个 Token）超出自定义扩展预算，已从上下文中排除。"
+      "replacement": "此 MCP 服务中的 $1 个工具（$2 Token）超出自定义扩展预算，已从上下文中排除。"
     },
     {
       "regex": "^Exceeded the customization token budget \\(([\\d,]+)\\s*tokens\\) and was excluded from context\\.$",
-      "replacement": "已超出自定义扩展 Token 预算（$1 个 Token），已从上下文中排除。"
+      "replacement": "已超出自定义扩展 Token 预算（$1 Token），已从上下文中排除。"
     },
     {
       "regex": "^Worked\\s+for\\s+(\\d+)\\s*d\\s+(\\d+)\\s*h\\s+(\\d+)\\s*m$",
