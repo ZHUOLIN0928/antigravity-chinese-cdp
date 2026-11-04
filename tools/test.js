@@ -164,6 +164,10 @@ async function runTests() {
   });
 
   test('install.sh and install.bat should support --with-rules and --once', () => {
+    const sh = fs.readFileSync(path.join(ROOT_DIR, 'install.sh'), 'utf8');
+    const bat = fs.readFileSync(path.join(ROOT_DIR, 'install.bat'), 'utf8');
+    assert(sh.includes('CodeX 风格过程透明化'), 'install.sh must include CodeX transparent workflow rule');
+    assert(bat.includes('CodeX 风格过程透明化'), 'install.bat must include CodeX transparent workflow rule');
     const shContent = fs.readFileSync(INSTALL_SH_PATH, 'utf8');
     const batContent = fs.readFileSync(INSTALL_BAT_PATH, 'utf8');
     assert(shContent.includes('--with-rules'), 'install.sh must support --with-rules');
