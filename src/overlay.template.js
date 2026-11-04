@@ -100,6 +100,9 @@
     '[class*="diffEditor"]', '.token', '.hljs', '[class*="mtk"]',
     '.font-mono', '[data-quotable-inline="true"]', '.context-scope-mention',
     '[data-testid="file-title-name"]', '[data-testid="entity-pill"]',
+    // Customization cards (keep extension names and descriptions in native English)
+    '[data-testid="customization-card"]',
+    '.agy-card',
     // Sidebar project names & conversation titles
     '[data-project-card="true"]',
     '[data-testid="conversation-row-sidebar"] span.truncate',
