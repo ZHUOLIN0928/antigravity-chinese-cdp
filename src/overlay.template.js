@@ -91,6 +91,9 @@
     // User sent messages, AI markdown responses, and expanded thinking prose
     '[data-testid="user-input-step"] [data-quotable="true"]',
     '[data-testid="planner-response-text"]',
+    // Artifact views, markdown body & article content (prevent translating user document prose)
+    '[data-testid*="artifact-"]', '[data-testid="artifact-view"]',
+    '.markdown-content', '.prose', 'article',
     '.cursor-edit',
     // Code blocks, terminals, editors, file viewers, diffs, syntax tokens, file/entity pills
     'script', 'style', 'code', 'pre', 'kbd', 'samp', 'var', 'noscript', 'svg', 'path', 'canvas',
