@@ -1,7 +1,7 @@
 {
   "version": "3.0.0",
   "target": "Google Antigravity v2.29.0+",
-  "exact_count": 5267,
+  "exact_count": 5266,
   "patterns_count": 347,
   "exact": {
     "9222": "9222",
@@ -134,7 +134,6 @@
     "Actions the agent may always perform without asking.": "Agent 始终可以执行的操作，无需询问。",
     "Actions the agent may never perform.": "Agent 绝不可执行的操作。",
     "Actions the agent must always ask before performing.": "Agent 在执行前必须始终询问的操作。",
-    "Active": "活跃",
     "Active Browser page": "活动浏览器页面",
     "Active Browser pages": "活动浏览器页面列表",
     "Active Context Start": "活跃上下文起点",
