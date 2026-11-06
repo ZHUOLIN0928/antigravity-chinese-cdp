@@ -98,9 +98,9 @@ uninstall.bat
 
 ## 词库与覆盖范围
 
-* **精确词条**：4,977 条（覆盖设置面板、侧边栏、控制面板、通知中心、快捷键、菜单项及内置插件）。
-* **动态正则规则**：338 组（覆盖思考时间、工作耗时、相对时间戳、多步骤工具合并摘要等）。
-* **适配版本**：Google Antigravity v2.26.0+（向下兼容 v2.18.0+）。
+* **精确词条**：5,267 条（完整覆盖 Antigravity v2.29.0 通用设置、内置浏览器、语音模式、自动化任务、快捷键系统及扩展市场）。
+* **动态正则规则**：347 组（覆盖思考时间、工作耗时、相对时间戳、多步骤工具合并摘要等）。
+* **适配版本**：Google Antigravity v2.29.0+（向下兼容 v2.18.0+）。
 
 所有词条与规则已在 [`dict/zh-CN.json`](dict/zh-CN.json) 中完整开放。
 
@@ -108,13 +108,16 @@ uninstall.bat
 
 ## 致谢与开源溯源
 
-本项目的词库建设与技术实现吸收借鉴了开源社区同类项目的经验与成果，特此致谢：
+本项目的底层定位为 **Chrome DevTools Protocol (CDP) 运行期内存注入方案**，旨在解决 macOS/Windows 下直接修改 `app.asar` 带来的代码签名破坏与钥匙串弹窗问题。本项目的词库建设充分尊重并吸收了开源社区现有项目的成果，特此做出完整来源声明与致谢：
 
+* **社区贡献者**：
+  - 特别致谢 **[@ichika000](https://github.com/ichika000)**，提交 PR #2 与 PR #4，完成了 Chromium 原生 `DevToolsActivePort` 端口发现、自适应退避降载机制、Antigravity v2.29.0 全量快捷键与自动化模块适配，并推动了 Agent / Subagent 现代开发者术语规范的落地。
 * **[yiheng8023/antigravity-chinese](https://github.com/yiheng8023/antigravity-chinese)**：
-  - 本项目融合了其适配 Antigravity v2.26.0 的增量词库；
-  - 借鉴了其针对部分动态正则规则的设计以及模型选择器边界隔离的思路。
+  - 感谢其持续追踪官方版本并开源维护的 Antigravity v2.29.0 设置面板、内置浏览器及语音模式增量词库；
+  - 本项目融合并吸收了其对设置项及部分动态正则规则的翻译成果。
 * **[qqxpee/antigravity2-cn](https://github.com/qqxpee/antigravity2-cn)**：
-  - 本项目融合了其基础词库与社区沉淀；
+  - 感谢其基础词库沉淀与社区共建；
+  - 本项目融合了其 v2.29.0 补丁词条（`page_v229_patch.json`）；
   - 本项目作者此前曾向其贡献 1,454 条 v2.18.1 简繁双语词条、Lexical 输入焦点保护及步骤耗时正则（详见 PR #34 及 commit `175cce6`）。
 * **[kdczyz/antigravity-chinese](https://github.com/kdczyz/antigravity-chinese)**：
   - 感谢其早期通过 CDP 调试端口从外部进行页面探测与注入的原型探索。
