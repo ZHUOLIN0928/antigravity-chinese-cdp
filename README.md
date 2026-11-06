@@ -35,9 +35,9 @@
 curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash
 ```
 
-> **提示**：若希望一键同步中文智能体交互规范（强制中文，保留 Subagent、Hook、Sidecar 原生术语至 `~/.gemini/config/AGENTS.md`），可追加 `--with-rules`：
+> **提示**：若希望一键同步中文智能体交互规范（强制中文，保留 Subagent、Hook、Sidecar 原生术语至 `~/.gemini/config/AGENTS.md`），可追加 `--with-rules          # 可选：同步写入中文交互、术语保留及 CodeX 风格流式输出规则
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --with-rules
+> curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --with-rules          # 可选：同步写入中文交互、术语保留及 CodeX 风格流式输出规则
 > ```
 
 安装脚本将自动执行以下操作：
@@ -50,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp
 在命令提示符或 PowerShell 中运行：
 
 ```bat
-install.bat --with-rules
+install.bat --with-rules          # 可选：同步写入中文交互、术语保留及 CodeX 风格流式输出规则
 ```
 
 ### 方式三：面向 AI 智能体（Agent）自动化安装
@@ -59,7 +59,7 @@ install.bat --with-rules
 
 ```bash
 # 智能体专用无交互指令（输出标准化 JSON）
-curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --agent --with-rules
+curl -fsSL https://raw.githubusercontent.com/ZHUOLIN0928/antigravity-chinese-cdp/main/install.sh | bash -s -- --agent --with-rules          # 可选：同步写入中文交互、术语保留及 CodeX 风格流式输出规则
 ```
 
 ---

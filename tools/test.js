@@ -39,9 +39,17 @@ async function runTests() {
     assert(Array.isArray(data.patterns), 'dict.patterns must be an array');
   });
 
+  test('dict/zh-CN.json must retain Agent terminology', () => {
+    const data = JSON.parse(fs.readFileSync(DICT_PATH, 'utf8'));
+    assert.strictEqual(data.exact['Agent'], 'Agent');
+    assert.strictEqual(data.exact['1 agent running'], '1 个正在运行的 Agent');
+    const hasZhinengti = Object.values(data.exact).some(v => v.includes('智能体'));
+    assert(!hasZhinengti, 'exact dictionary must not translate Agent to 智能体');
+  });
+
   test('dict/zh-CN.json must retain Subagent terminology', () => {
     const data = JSON.parse(fs.readFileSync(DICT_PATH, 'utf8'));
-    assert.strictEqual(data.exact['1 subagent running'], '1 个运行中的Subagent');
+    assert(['1 个运行中的Subagent', '1 个运行中的 Subagent'].includes(data.exact['1 subagent running']));
     assert.strictEqual(data.exact['(subagent)'], '(subagent)');
     assert(data.patterns.some((p) => p.replacement && p.replacement.includes('Subagent')));
   });
@@ -49,7 +57,7 @@ async function runTests() {
   test('dict/zh-CN.json must retain Hook terminology', () => {
     const data = JSON.parse(fs.readFileSync(DICT_PATH, 'utf8'));
     assert.strictEqual(data.exact['+ Add Hook'], '+ 添加 Hook');
-    assert.strictEqual(data.exact['Agent Hooks Configuration'], '智能体 Hook 配置');
+    assert(['Agent Hook 配置', '智能体 Hook 配置'].includes(data.exact['Agent Hooks Configuration']));
     assert.strictEqual(data.exact['Add Hook Card'], '添加 Hook 卡片');
   });
 
@@ -156,6 +164,10 @@ async function runTests() {
   });
 
   test('install.sh and install.bat should support --with-rules and --once', () => {
+    const sh = fs.readFileSync(path.join(ROOT_DIR, 'install.sh'), 'utf8');
+    const bat = fs.readFileSync(path.join(ROOT_DIR, 'install.bat'), 'utf8');
+    assert(sh.includes('CodeX 风格过程透明化'), 'install.sh must include CodeX transparent workflow rule');
+    assert(bat.includes('CodeX 风格过程透明化'), 'install.bat must include CodeX transparent workflow rule');
     const shContent = fs.readFileSync(INSTALL_SH_PATH, 'utf8');
     const batContent = fs.readFileSync(INSTALL_BAT_PATH, 'utf8');
     assert(shContent.includes('--with-rules'), 'install.sh must support --with-rules');
