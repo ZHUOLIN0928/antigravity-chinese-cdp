@@ -1,7 +1,7 @@
 {
   "version": "3.0.0",
-  "target": "Google Antigravity v2.29.0+",
-  "exact_count": 5267,
+  "target": "Google Antigravity v2.30.0+",
+  "exact_count": 5278,
   "patterns_count": 347,
   "exact": {
     "9222": "9222",
@@ -5270,7 +5270,18 @@
     "⚠️ Warning: \"Always Proceed\" is enabled without sandbox protection. This is very dangerous and we do not recommend doing this.": "⚠️ 警告：“总是直接继续”在无沙箱保护的情况下已启用。这非常危险，我们不建议这样做。",
     "了解更多 about": "了解关于",
     "对话 Log": "对话记录",
-    "项目 options": "项目选项"
+    "项目 options": "项目选项",
+    "Interface Layout": "界面布局",
+    "Knowledge Work": "知识工作",
+    "Simplified interface for research, writing, and everyday tasks.": "适用于研究、写作和日常任务的精简界面。",
+    "Software Engineering": "软件工程",
+    "Full interface for coding, developer tools, and managing agents.": "适用于编码、开发工具和管理 Agent 的完整界面。",
+    "Knowledge Work mode": "知识工作模式",
+    "Software Engineering mode": "软件工程模式",
+    "Switch to Knowledge Work": "切换至知识工作",
+    "Switch to Software Engineering": "切换至软件工程",
+    "Choose an interface layout": "选择界面布局",
+    "Select interface layout": "选择界面布局"
   },
   "patterns": [
     {
