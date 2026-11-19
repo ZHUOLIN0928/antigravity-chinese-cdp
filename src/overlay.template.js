@@ -105,6 +105,10 @@
     // Sidebar project names & conversation titles
     '[data-project-card="true"]',
     '[data-testid="conversation-row-sidebar"] span.truncate',
+    // Remote SSH host aliases, SSH errors, and GitHub PR metadata
+    '[data-ssh-host] span.truncate',
+    '[data-testid="ssh-connect-error"] .whitespace-pre-line',
+    '[data-testid="ssh-config-file-name"][tabindex]',
     '[translate="no"]', '.notranslate'
   ].join(', ');
 
@@ -125,8 +129,46 @@
     '[data-testid="file-title-name"]', '[data-testid="entity-pill"]',
     '[data-project-card="true"]',
     '[data-testid="conversation-row-sidebar"]',
+    '[data-ssh-host] span.truncate',
+    '[data-testid="ssh-connect-error"] .whitespace-pre-line',
+    '[data-testid="ssh-config-file-name"][tabindex]',
     '[translate="no"]', '.notranslate'
   ].join(', ');
+
+  function isPullRequestLink(el) {
+    if (!el || el.tagName !== 'A') return false;
+    const href = el.getAttribute?.('href') || '';
+    return /^https?:\/\/(?:github\.com|depot\.code\.corp\.goog)\/[\w.-]+\/[\w.-]+\/pull\/[1-9]\d*(?:[/?#]|$)/i.test(href);
+  }
+
+  function hasPullRequestCardHeader(el) {
+    const header = el && el.firstElementChild;
+    return !!(
+      header &&
+      header.classList?.contains('text-compact') &&
+      header.classList?.contains('gap-1.5') &&
+      isPullRequestLink(header.querySelector('a[href]'))
+    );
+  }
+
+  function isRemoteMetadataBoundary(el) {
+    if (!el || el.nodeType !== Node.ELEMENT_NODE) return false;
+    const cl = el.classList;
+    if (!cl) return false;
+    if (el.tagName === 'DIV' && cl.contains('text-compact') && (cl.contains('-mt-1') || cl.contains('font-medium')) && hasPullRequestCardHeader(el.parentElement)) {
+      return true;
+    }
+    if (cl.contains('line-clamp-4') && cl.contains('whitespace-pre-wrap') && hasPullRequestCardHeader(el.parentElement)) {
+      return true;
+    }
+    if (el.tagName === 'SPAN' && cl.contains('break-words') && cl.contains('min-w-0') && el.parentElement?.classList?.contains('grid-cols-[auto_1fr]') && hasPullRequestCardHeader(el.parentElement.parentElement)) {
+      return true;
+    }
+    if (isPullRequestLink(el) && (el.closest?.('.text-compact.gap-1\\.5') || el.hasAttribute?.('data-item-id'))) {
+      return true;
+    }
+    return false;
+  }
 
   function isModelSelectorBoundary(el) {
     if (!el || el.nodeType !== Node.ELEMENT_NODE) return false;
@@ -169,7 +211,7 @@
         return true;
       }
       while (el) {
-        if (isEditableElement(el) || isModelSelectorBoundary(el)) return true;
+        if (isEditableElement(el) || isModelSelectorBoundary(el) || isRemoteMetadataBoundary(el)) return true;
         if (typeof el.closest === 'function' && el.closest(SKIP_TEXT_SELECTOR)) return true;
         const root = typeof el.getRootNode === 'function' ? el.getRootNode() : null;
         el = (root && root.host) ? root.host : null;
@@ -183,11 +225,11 @@
   function shouldSkipAttrs(element) {
     try {
       if (!element || element.nodeType !== Node.ELEMENT_NODE) return true;
-      if (element.isContentEditable || isModelSelectorBoundary(element)) return true;
+      if (element.isContentEditable || isModelSelectorBoundary(element) || isRemoteMetadataBoundary(element)) return true;
       // Do not skip placeholder/aria-label translation even when input is focused
       let el = element;
       while (el) {
-        if (el.isContentEditable || isModelSelectorBoundary(el)) return true;
+        if (el.isContentEditable || isModelSelectorBoundary(el) || isRemoteMetadataBoundary(el)) return true;
         if (typeof el.closest === 'function' && el.closest(SKIP_ATTR_SELECTOR)) return true;
         const root = typeof el.getRootNode === 'function' ? el.getRootNode() : null;
         el = (root && root.host) ? root.host : null;
@@ -491,7 +533,52 @@
       return;
     }
 
-    const translated = translateCoreUnit(trimmed);
+    // Preserve SSH host alias/path text node immediately following fixed SSH prefix
+    const parent = node.parentElement;
+    if (node.previousSibling && node.previousSibling.nodeType === Node.TEXT_NODE && parent?.classList) {
+      const prevTxt = (node.previousSibling._zhOrig || node.previousSibling.nodeValue || '').trim();
+      if (
+        ((prevTxt === "Couldn't connect to" || prevTxt === '无法连接到') && parent.closest?.('[data-testid="ssh-connect-error"]')) ||
+        ((prevTxt === 'No hosts in' || prevTxt === '尚无主机记录，配置文件：') && parent.closest?.('[data-testid="ssh-connect-dialog"]'))
+      ) {
+        node._zhOrig = raw;
+        return;
+      }
+    }
+
+    // Context-scoped v2.33.0 UI strings (Welcome, SSH, Find bar, PR card)
+    let ctxTrans = null;
+    if (parent) {
+      const testId = parent.getAttribute?.('data-testid');
+      if (trimmed === 'Welcome to Antigravity!' && parent.tagName === 'DIV' && parent.classList?.contains('entrance-title')) {
+        ctxTrans = '欢迎使用 Antigravity！';
+      } else if (trimmed === 'SSH Host' && parent.closest?.('[data-testid="project-selector-ssh-host-trigger"]')) {
+        ctxTrans = 'SSH 主机';
+      } else if (parent.classList?.contains('text-muted-foreground') && parent.closest?.('[data-testid="ssh-connect-dialog"]')) {
+        if (trimmed === 'No hosts in') ctxTrans = '尚无主机记录，配置文件：';
+        else if (trimmed === 'yet. Type one above.') ctxTrans = '。可在上方手动输入。';
+      } else if (trimmed === "Couldn't connect to" && parent.classList?.contains('text-foreground') && parent.closest?.('[data-testid="ssh-connect-error"]')) {
+        ctxTrans = '无法连接到';
+      } else if (trimmed === 'in a terminal' && parent.tagName === 'SPAN' && parent.classList?.contains('whitespace-nowrap') && parent.closest?.('[data-testid="github-hover-auth-actions"]')) {
+        ctxTrans = '（在终端中）';
+      } else if (trimmed === 'Author' && parent.tagName === 'SPAN' && parent.classList?.contains('text-muted-foreground') && parent.parentElement?.classList?.contains('grid-cols-[auto_1fr]') && hasPullRequestCardHeader(parent.parentElement.parentElement)) {
+        ctxTrans = '作者';
+      } else if (testId === 'find-bar-match-count') {
+        const mc = trimmed.match(/^(\d+) of (\d+\+?)$/);
+        if (mc) ctxTrans = `第 ${mc[1]} 项，共 ${mc[2]} 项`;
+      } else if (testId === 'ssh-connect-hidden-hosts-toggle') {
+        const hh = trimmed.match(/^(\d+) hidden hosts?$/);
+        if (hh) ctxTrans = `${hh[1]} 台隐藏主机`;
+      } else if (testId === 'ssh-connect-host-group-label') {
+        const cfg = trimmed.match(/^SSH Config \((.+)\)$/);
+        if (cfg) ctxTrans = `SSH 配置（${cfg[1]}）`;
+      } else if (parent.classList?.contains('z-10') && parent.parentElement?.classList?.contains('text-compact') && hasPullRequestCardHeader(parent.parentElement.parentElement?.parentElement)) {
+        const prState = { Open: '开放', Closed: '已关闭', Merged: '已合并', Draft: '草稿' }[trimmed];
+        if (prState) ctxTrans = prState;
+      }
+    }
+
+    const translated = ctxTrans !== null ? ctxTrans : translateCoreUnit(trimmed);
     if (translated !== null && translated !== trimmed) {
       let leadingSpace = raw.match(/^\s*/)[0];
       const trailingSpace = raw.match(/\s*$/)[0];
