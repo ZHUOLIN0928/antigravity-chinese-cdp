@@ -390,6 +390,17 @@
     if ((m = n.match(/^Updated\s+(.+?)\s+ago$/i))) {
       return cacheSet(trimmed, `${formatDuration(m[1])}前更新`);
     }
+    if ((m = n.match(/^(.+?)\s+will be removed from Antigravity on\s+([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})\.?$/i))) {
+      const monthMap = {
+        january: '1', february: '2', march: '3', april: '4',
+        may: '5', june: '6', july: '7', august: '8',
+        september: '9', october: '10', november: '11', december: '12',
+      };
+      const monthNum = monthMap[m[2].toLowerCase()];
+      if (monthNum) {
+        return cacheSet(trimmed, `${m[1]} 将于 ${m[4]} 年 ${monthNum} 月 ${m[3]} 日从 Antigravity 中移除。`);
+      }
+    }
 
     // 5. 338 Cascading Regex Patterns (from yiheng8023 v2.26.0 suite)
     for (let i = 0; i < compiledPatterns.length; i++) {
@@ -508,13 +519,28 @@
     // O(1) Negative & Positive Cache Short-Circuit!
     if (node._zhOrig === raw) return;
 
-    if (shouldSkipText(node)) {
+    const trimmed = raw.trim();
+    if (!trimmed) {
       node._zhOrig = raw;
       return;
     }
 
-    const trimmed = raw.trim();
-    if (!trimmed) {
+    // Model selector status badges ("New" / "Notice" / "Unavailable") inside protected model-selector-item
+    const parent = node.parentElement;
+    if (
+      (trimmed === 'New' || trimmed === 'Notice' || trimmed === 'Unavailable') &&
+      parent?.closest?.('[data-testid="model-selector-item"]') &&
+      !parent.closest?.('[data-effort], [data-testid="model-selector-effort-option"], [data-testid="model-selector-effort-group"]')
+    ) {
+      const badgeMap = { New: '上新', Notice: '提示', Unavailable: '不可用' };
+      const leadingSpace = raw.match(/^\s*/)[0];
+      const trailingSpace = raw.match(/\s*$/)[0];
+      node.nodeValue = leadingSpace + badgeMap[trimmed] + trailingSpace;
+      node._zhOrig = node.nodeValue;
+      return;
+    }
+
+    if (shouldSkipText(node)) {
       node._zhOrig = raw;
       return;
     }
@@ -534,7 +560,6 @@
     }
 
     // Preserve SSH host alias/path text node immediately following fixed SSH prefix
-    const parent = node.parentElement;
     if (node.previousSibling && node.previousSibling.nodeType === Node.TEXT_NODE && parent?.classList) {
       const prevTxt = (node.previousSibling._zhOrig || node.previousSibling.nodeValue || '').trim();
       if (
@@ -711,7 +736,16 @@
       return;
     }
     if (root.nodeType === Node.ELEMENT_NODE) {
-      if (isEditableElement(root) || isModelSelectorBoundary(root)) return;
+      if (isEditableElement(root)) return;
+      const rootTid = root.getAttribute?.('data-testid');
+      if (
+        rootTid === 'model-selector-trigger' ||
+        rootTid === 'model-selector-effort-option' ||
+        rootTid === 'model-selector-effort-group' ||
+        root.hasAttribute?.('data-effort')
+      ) {
+        return;
+      }
       translateElementAttrsAndInline(root);
       if (root.shadowRoot) translateSubtree(root.shadowRoot);
     }
