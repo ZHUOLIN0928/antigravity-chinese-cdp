@@ -1,6 +1,6 @@
 {
   "name": "antigravity-chinese-cdp",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "description": "Non-invasive Chinese localization for Google Antigravity via Chrome DevTools Protocol",
   "main": "bin/antigravity-zh-patch.js",
   "scripts": {
